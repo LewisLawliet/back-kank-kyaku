@@ -14,7 +14,9 @@ model Article {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(255)
   content   String
-
+  //image LongBlob 
+userId Int ?
+user User? @relation(fields: [userId], references: [id])
 }
 
 
@@ -23,22 +25,40 @@ model User {
   email   String   @unique
   name    String 
   password String
-  role Role ?
+  role  Role    @default(USER)
+  grade Grade[] 
+  articles Article []
 }
 
-model Role {
-  id      Int      @id @default(autoincrement())
-  name    String   @db.VarChar(45) 
-  //user   User    @relation(fields: [userId], references: [id])
-  //userId Int     @unique
-  userId User
-  
+enum Role {
+  USER
+  ADMIN
 }
 
-model Permission {
-  id      Int      @id @default(autoincrement())
-  enable  Boolean  @default(value: false)
-  user   User    @relation(fields: [userId], references: [id])  
-  
+model Grade {
+  id      Int      @id @default(autoincrement()) 
+  name    String
+  date DateTime @default(now())
+  score Int
+  userId Int ?
+  user User? @relation(fields: [userId], references: [id])
+  //historique HistoriqueGrade ?
 }
+
+//model HistoriqueGrade {
+ // id      Int      @id @default(autoincrement()) 
+ // name    String 
+ // gradeId Int ?
+ // grade Grade? @relation(fields: [gradeId], references: [id])
+  
+//}
+
+//model Permission {
+//  id      Int      @id @default(autoincrement())
+//  enable  Boolean  @default(value: false)
+//  user   User    @relation(fields: [userId], references: [id]) 
+  
+//}
+
+
 

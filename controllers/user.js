@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
     console.log(getAll)
 }
 
-findAllUsers()
+//findAllUsers()
 
 
   const findOneUser= async()=> {
@@ -22,7 +22,17 @@ findAllUsers()
       })
       console.log(getOne)
   }
-  
+  export const createRole= async(req,res)=> {
+   
+    const post = await prisma.role.create({
+      data: {
+        name: "test",
+ 
+          }
+      })
+			console.log(post)
+		}
+    
   
   export const createUser= async(req,res)=> {
     bcrypt.hash(req.body.password, 10)	
@@ -45,6 +55,7 @@ findAllUsers()
         })*/
         .then(()=>{
           res.status(201).json({message: "user crée"})
+          
       })
   
       .catch((error)=>{
@@ -120,4 +131,7 @@ findAllUsers()
   })
   .finally(async () => {
     await prisma.$disconnect()
-  })*/        
+  })*/
+
+
+ 

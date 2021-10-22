@@ -1,4 +1,5 @@
 import Routes from "./routes/user.js"
+import RoutesGrades from "./routes/grade.js"
 import express from "express"
 export const App = express()
 
@@ -15,3 +16,4 @@ export const App = express()
 App.use(express.json());
 
 App.use("/api/auth", Routes)
+App.use("/api", RoutesGrades)
