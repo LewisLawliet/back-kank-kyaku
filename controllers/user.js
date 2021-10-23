@@ -41,7 +41,8 @@ const prisma = new PrismaClient()
       data: {
         name: req.body.name,
         email: req.body.email,
-        password: hash
+        password: hash,
+        role: req.body.role || undefined
           }
       })
 			
