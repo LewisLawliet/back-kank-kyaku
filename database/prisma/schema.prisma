@@ -6,28 +6,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 generator client {
   provider = "prisma-client-js"
-}
-
-model Article {
-  id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255)
-  content   String
-  //image LongBlob 
-userId Int ?
-user User? @relation(fields: [userId], references: [id])
-}
-
-
-model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String 
-  password String
-  role  Role    @default(USER)
-  grade Grade[] 
-  articles Article []
 }
 
 enum Role {
@@ -35,30 +16,104 @@ enum Role {
   ADMIN
 }
 
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String 
+  password String
+  role  Role   @default(USER) 
+  articles Article[]
+  quizzes  Quiz[]
+  userGrade UserGrade[]
+  userquizzes UserQuiz[]
+}
+
+model UserQuiz {
+  id      Int      @id @default(autoincrement())
+  userId Int 
+user User @relation(fields: [userId], references: [id])
+quizId Int
+quiz Quiz @relation(fields: [quizId], references: [id])
+}
+
+
+model Categorie {
+  id      Int  @id @default(autoincrement()) 
+  name    String  
+  articles Article[]  
+  quizzes Quiz[] 
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  content   String
+  //image LongBlob 
+userId Int 
+user User @relation(fields: [userId], references: [id])
+categorieId Int 
+categorie Categorie @relation(fields: [categorieId], references: [id])
+}
+
+model Quiz {
+  id        Int      @id @default(autoincrement())
+  name     String   @db.VarChar(255) 
+ categorieId Int?
+categorie Categorie? @relation(fields: [categorieId], references: [id]) 
+userId Int?
+user User? @relation(fields: [userId], references: [id])
+questions  Question[]
+scores Score[]
+grades Grade[]
+userquizzes UserQuiz[] 
+}
+
+model Question {
+  id Int    @id @default(autoincrement())
+  number Int
+  points Int
+  sentence String   @db.VarChar(255)    
+quizId Int
+quiz Quiz @relation(fields: [quizId], references: [id])
+answers Answer[]
+}
+
+model Answer {
+  id Int    @id @default(autoincrement())
+  isCorrect Boolean
+  questionId Int 
+question Question @relation(fields: [questionId], references: [id])
+}
+
+model Score {
+  id Int    @id @default(autoincrement())
+  totalPoints Int @default(0)
+ quizId Int
+quiz Quiz @relation(fields: [quizId], references: [id])
+}
+
 model Grade {
   id      Int      @id @default(autoincrement()) 
   name    String
-  date DateTime @default(now())
-  score Int
-  userId Int ?
-  user User? @relation(fields: [userId], references: [id])
-  //historique HistoriqueGrade ?
+  quizId Int
+  quiz Quiz @relation(fields: [quizId], references: [id])  
+  //minScore Int  
+  gradeCertifications UserGrade[]
 }
 
-//model HistoriqueGrade {
- // id      Int      @id @default(autoincrement()) 
- // name    String 
- // gradeId Int ?
- // grade Grade? @relation(fields: [gradeId], references: [id])
-  
-//}
+model UserGrade {
+  id      Int      @id @default(autoincrement())
+  attributionDate DateTime @default(now()) 
+ userId Int 
+ user User @relation(fields: [userId], references: [id]) 
+  gradeId Int
+  grade Grade @relation(fields: [gradeId], references: [id])  
+}
 
-//model Permission {
-//  id      Int      @id @default(autoincrement())
-//  enable  Boolean  @default(value: false)
-//  user   User    @relation(fields: [userId], references: [id]) 
-  
-//}
+
+
+
+
 
 
 
